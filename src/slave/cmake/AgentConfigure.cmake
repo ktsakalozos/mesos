@@ -54,6 +54,7 @@ set(AGENT_INCLUDE_DIRS
   # Contains (e.g.) compiled *.pb.h files.
   ${MESOS_BIN_INCLUDE_DIR}
   ${MESOS_BIN_INCLUDE_DIR}/mesos
+  ${MESOS_BIN_INCLUDE_DIR}/lxd
   ${MESOS_BIN_SRC_DIR}
   ${MESOS_SRC_DIR}
   )

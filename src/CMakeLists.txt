@@ -156,6 +156,8 @@ set(AGENT_SRC
   slave/containerizer/containerizer.cpp
   slave/containerizer/docker.cpp
   slave/containerizer/fetcher.cpp
+  slave/containerizer/lxd/launch.cpp
+  slave/containerizer/lxd/lxd.cpp
   slave/containerizer/mesos/containerizer.cpp
   slave/containerizer/mesos/isolator.cpp
   slave/containerizer/mesos/launch.cpp
@@ -547,6 +549,7 @@ add_subdirectory(log/)
 add_subdirectory(master/)
 add_subdirectory(slave/)
 add_subdirectory(slave/containerizer/mesos/)
+add_subdirectory(slave/containerizer/lxd/)
 add_subdirectory(usage/)
 
 # BUILD THE MESOS TESTS.

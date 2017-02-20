@@ -37,6 +37,7 @@
 #include "slave/containerizer/composing.hpp"
 #include "slave/containerizer/containerizer.hpp"
 #include "slave/containerizer/docker.hpp"
+#include "slave/containerizer/lxd/lxd.hpp"
 
 #include "slave/containerizer/mesos/containerizer.hpp"
 #include "slave/containerizer/mesos/launcher.hpp"
@@ -290,6 +291,15 @@ Try<Containerizer*> Containerizer::create(
         DockerContainerizer::create(flags, fetcher, nvidia);
       if (containerizer.isError()) {
         return Error("Could not create DockerContainerizer: " +
+                     containerizer.error());
+      } else {
+        containerizers.push_back(containerizer.get());
+      }
+    } else if (type == "lxd") {
+      Try<LxdContainerizer*> containerizer =
+        LxdContainerizer::create(flags, fetcher, nvidia);
+      if (containerizer.isError()) {
+        return Error("Could not create LxdContainerizer: " +
                      containerizer.error());
       } else {
         containerizers.push_back(containerizer.get());
