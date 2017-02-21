@@ -156,7 +156,7 @@ Try<DockerContainerizer*> DockerContainerizer::create(
     Fetcher* fetcher,
     const Option<NvidiaComponents>& nvidia)
 {
-	    LOG(INFO) << "**** Creating a container ***** ";
+  LOG(INFO) << "**** Creating a container ***** ";
   // Create and initialize the container logger module.
   Try<ContainerLogger*> logger =
     ContainerLogger::create(flags.container_logger);
@@ -774,7 +774,7 @@ Try<Nothing> DockerContainerizerProcess::checkpoint(
 Future<Nothing> DockerContainerizer::recover(
     const Option<SlaveState>& state)
 {
-				    LOG(INFO) << "**** Recover a container ***** ";
+  LOG(INFO) << "**** Recover a container ***** ";
   return dispatch(
       process.get(),
       &DockerContainerizerProcess::recover,
@@ -792,8 +792,6 @@ Future<bool> DockerContainerizer::launch(
     const map<string, string>& environment,
     bool checkpoint)
 {
-	//string output = exec("lxc start ubuntu-list-1")
-	//	    LOG(INFO) << "**** Launching a container with: " << output;
   return dispatch(
       process.get(),
       &DockerContainerizerProcess::launch,
@@ -824,7 +822,7 @@ Future<Nothing> DockerContainerizer::update(
 Future<ResourceStatistics> DockerContainerizer::usage(
     const ContainerID& containerId)
 {
-			    LOG(INFO) << "**** Usage a container ***** ";
+  LOG(INFO) << "**** Usage a container ***** ";
   return dispatch(
       process.get(),
       &DockerContainerizerProcess::usage,
@@ -835,7 +833,7 @@ Future<ResourceStatistics> DockerContainerizer::usage(
 Future<ContainerStatus> DockerContainerizer::status(
     const ContainerID& containerId)
 {
-			    LOG(INFO) << "**** Status a container ***** ";
+  LOG(INFO) << "**** Status a container ***** ";
   return dispatch(
       process.get(),
       &DockerContainerizerProcess::status,
@@ -846,7 +844,7 @@ Future<ContainerStatus> DockerContainerizer::status(
 Future<Option<ContainerTermination>> DockerContainerizer::wait(
     const ContainerID& containerId)
 {
-					    LOG(INFO) << "**** Wait a container ***** ";
+  LOG(INFO) << "**** Wait a container ***** ";
   return dispatch(
       process.get(),
       &DockerContainerizerProcess::wait,
@@ -856,7 +854,7 @@ Future<Option<ContainerTermination>> DockerContainerizer::wait(
 
 Future<bool> DockerContainerizer::destroy(const ContainerID& containerId)
 {
-					    LOG(INFO) << "**** Destroy a container ***** ";
+  LOG(INFO) << "**** Destroy a container ***** ";
   return dispatch(
       process.get(),
       &DockerContainerizerProcess::destroy,

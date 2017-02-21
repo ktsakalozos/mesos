@@ -146,7 +146,7 @@ LxdContainerizer::LxdContainerizer(
     const Owned<ContainerLogger>& logger,
     const Option<NvidiaComponents>& nvidia)
 {
-	this->process = new Lxd.create()
+    this->process = new Lxd.create()
 }
 
 
@@ -165,9 +165,7 @@ Future<bool> LxdContainerizer::launch(
     const map<string, string>& environment,
     bool checkpoint)
 {
-	//string output = exec("lxc start ubuntu-list-1")
-	LOG(INFO) << "**** Launching a container with: " << output;
-  // should do an lxd launch
+  LOG(INFO) << "**** Launching a container with: " << output;
   return dispatch(
       process.get(),
       &Lxd::launch,

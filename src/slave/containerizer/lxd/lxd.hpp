@@ -523,7 +523,6 @@ private:
 class Lxd
 {
 public:
-
   // Create Docker abstraction and optionally validate docker.
   static Try<process::Owned<Lxd>> create(
       const std::string& path,
@@ -558,8 +557,7 @@ public:
         process::Subprocess::FD(STDERR_FILENO))
     const;
 
-  virtual ~Lxd() {}
-
+  virtual ~Lxd() {};
 };
 
 
