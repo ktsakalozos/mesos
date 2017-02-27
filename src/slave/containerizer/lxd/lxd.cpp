@@ -111,11 +111,18 @@ namespace slave {
 
 
 // Declared in header, see explanation there.
-const string LXD_NAME_PREFIX = "mesos-";
+const string LXD_NAME_PREFIX = "lxd-mesos-";
 
 
 // Declared in header, see explanation there.
 const string LXD_NAME_SEPERATOR = ".";
+
+
+void commandDiscarded(const Subprocess& s, const string& cmd)
+{
+  VLOG(1) << "'" << cmd << "' is being discarded";
+  os::killtree(s.pid(), SIGKILL);
+}
 
 
 Try<LxdContainerizer*> LxdContainerizer::create(
@@ -143,10 +150,10 @@ Try<LxdContainerizer*> LxdContainerizer::create(
 LxdContainerizer::LxdContainerizer(
     const Flags& flags,
     Fetcher* fetcher,
-    const Owned<ContainerLogger>& logger,
+    const process::Owned<ContainerLogger>& logger,
     const Option<NvidiaComponents>& nvidia)
 {
-    this->process = new Lxd.create()
+    this->process = Lxd::create().get();
 }
 
 
@@ -165,7 +172,7 @@ Future<bool> LxdContainerizer::launch(
     const map<string, string>& environment,
     bool checkpoint)
 {
-  LOG(INFO) << "**** Launching a container with: " << output;
+  LOG(INFO) << "**** Launching a container with: ";
   return dispatch(
       process.get(),
       &Lxd::launch,
@@ -179,7 +186,7 @@ Future<bool> LxdContainerizer::launch(
       checkpoint);
 }
 
-
+/*
 Future<Nothing> LxdContainerizer::recover(
     const Option<SlaveState>& state)
 {
@@ -248,48 +255,41 @@ void commandDiscarded(const Subprocess& s, const string& cmd)
 }
 
 
+*/
 
-
-Try<Owned<Lxd>> Lxd::create()
+Try<Owned<Lxd>> Lxd::create(
+      bool validate,
+      const Option<JSON::Object>& config)
 {
-  Owned<Lxd> lxd(new Lxd());
+  Owned<Lxd> lxd = Owned<Lxd>(new Lxd());
 
   return lxd;
 }
 
-Future<Option<int>> Lxd::launch(
-    const ContainerInfo& containerInfo,
-    const CommandInfo& commandInfo,
-    const string& name,
-    const string& sandboxDirectory,
-    const string& mappedDirectory,
-    const Option<Resources>& resources,
-    const Option<map<string, string>>& env,
-    const process::Subprocess::IO& _stdout,
-    const process::Subprocess::IO& _stderr) const
+Future<bool> Lxd::launch(
+    const ContainerID& containerId,
+    const Option<TaskInfo>& taskInfo,
+    const ExecutorInfo& executorInfo,
+    const string& directory,
+    const Option<string>& user,
+    const SlaveID& slaveId,
+    const map<string, string>& environment,
+    bool checkpoint)
 {
-  if (!containerInfo.has_docker()) {
-    return Failure("No docker info found in container info");
-  }
-
-  const ContainerInfo::DockerInfo& dockerInfo = containerInfo.docker();
-
   vector<string> argv;
   argv.push_back("lxc");
   argv.push_back("launch");
   argv.push_back("ubuntu");
-  argv.push_back(name);
+  argv.push_back("name-of-container");
 
   string cmd = strings::join(" ", argv);
 
   LOG(INFO) << "Running " << cmd;
 
   Try<Subprocess> s = subprocess(
-      path,
+      "/usr/bin/",
       argv,
-      Subprocess::PATH("/dev/null"),
-      _stdout,
-      _stderr);
+      Subprocess::PATH("/dev/null"));
 
   if (s.isError()) {
     return Failure("Failed to create subprocess '" + cmd + "': " + s.error());
@@ -297,7 +297,8 @@ Future<Option<int>> Lxd::launch(
 
   s->status()
     .onDiscard(lambda::bind(&commandDiscarded, s.get(), cmd));
-  return s->status();
+  // return s->status();
+  return true;
 }
 
 
