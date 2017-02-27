@@ -186,7 +186,6 @@ Future<bool> LxdContainerizer::launch(
       checkpoint);
 }
 
-/*
 Future<Nothing> LxdContainerizer::recover(
     const Option<SlaveState>& state)
 {
@@ -210,8 +209,8 @@ Future<ResourceStatistics> LxdContainerizer::usage(
     const ContainerID& containerId)
 {
   LOG(INFO) << "**** Usage a container ***** ";
-  Future<Nothing> f = Nothing();
-  return f;
+  // TODO(kjackal): fix mem leak
+  return ResourceStatistics();
 }
 
 
@@ -219,8 +218,8 @@ Future<ContainerStatus> LxdContainerizer::status(
     const ContainerID& containerId)
 {
   LOG(INFO) << "**** Status a container ***** ";
-  Future<Nothing> f = Nothing();
-  return f;
+  // TODO(kjackal): fix mem leak
+  return ContainerStatus();
 }
 
 
@@ -228,16 +227,15 @@ Future<Option<ContainerTermination>> LxdContainerizer::wait(
     const ContainerID& containerId)
 {
   LOG(INFO) << "**** Wait a container ***** ";
-  Future<Nothing> f = Nothing();
-  return f;
+  // TODO(kjackal): fix mem leak
+  return Option<ContainerTermination>();
 }
 
 
 Future<bool> LxdContainerizer::destroy(const ContainerID& containerId)
 {
   LOG(INFO) << "**** Destroy a container ***** ";
-  Future<Nothing> f = Nothing();
-  return f;
+  return true;
 }
 
 
@@ -245,17 +243,9 @@ Future<hashset<ContainerID>> LxdContainerizer::containers()
 {
   LOG(INFO) << "**** Destroy a container ***** ";
   Future<Nothing> f = Nothing();
-  return f;
+  return hashset<ContainerID>();
 }
 
-void commandDiscarded(const Subprocess& s, const string& cmd)
-{
-  VLOG(1) << "'" << cmd << "' is being discarded";
-  os::killtree(s.pid(), SIGKILL);
-}
-
-
-*/
 
 Try<Owned<Lxd>> Lxd::create(
       bool validate,
